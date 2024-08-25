@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add a event</title>
+
+    <!--Meta Information about the website-->
+    <meta name="WRAPPERS" content="A timetable manager" />
+    <meta name="author" content="Akshat+Vansh" />
+    <meta name="keywords" content="Akshat+Vansh" />
+    <meta name="keywords" content="IITR" />
+
+    <!--CSS-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+</head>
+<body>
+      <div class="px-4 py-5 my-5 text-center">
+           <h1 class="display-1 fw-bold text-info">WRAPPERS</h1>
+       </div>
+      <hr>
+    <form action="/event" method="POST">
+        <div class="form-group">
+          <label for="exampleFormControlInput1">Organisation/club</label><br>
+          <input name="club" id="club" id="exampleFormControlInput1" placeholder="Organisation entity" required><br><br>
+
+          <label for="exampleFormControlInput1">SECRET KEY</label><br>
+          <input type="password" name="key" id="event" id="exampleFormControlInput1" placeholder="Secret Unique key" required><br><br>
+
+          <label for="exampleFormControlInput1">Event</label><br>
+          <input name="event" id="event" id="exampleFormControlInput1" placeholder="event name" required><br><br>
+
+          <label for="exampleFormControlInput1">Date</label><br>
+          <input type="date" name="date" id="event" id="exampleFormControlInput1" placeholder="date" required><br><br>
+
+          <label for="exampleFormControlInput1">Time</label><br>
+          <input type="time" name="time" id="event" id="exampleFormControlInput1" placeholder="Time" required><br><br>
+
+          <label for="exampleFormControlInput1">Venue</label><br>
+          <input name="venue" id="event" id="exampleFormControlInput1" placeholder="Venue" required><br><br>
+          
+          <button type="submit" class="btn btn-primary mb-2">Submit</button>
+        </div>
+    </form>
+
+    <footer class="text-muted text-center text-small">
+        <p class="text-muted">&copy; Wrappers by Akshat Srivastava and Vansh Garg</p>
+        </ul>
+        <p class="text-muted">FROM: 26/08/2024</p>            
+    </footer>
+    
+</body>
+</html>
