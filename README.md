@@ -17,7 +17,7 @@ For this you need:-<br/>
 <br/>
 1.) Libraries<br/>
    > Flask<br/>
-   > Date/Time<br/>
+   > Date-Time<br/>
    > MySQL-connector-python<br/>
    > Requests<br/>
    > Hashlib<br/>     
