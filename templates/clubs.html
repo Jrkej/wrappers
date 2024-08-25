@@ -7,10 +7,23 @@
 
     <!--Meta Information about the website-->
     <link rel="icon" href="static/logo.png">
+    <script src="../static/sha256.js"></script>
     <meta name="WRAPPERS" content="A timetable manager" />
     <meta name="author" content="Akshat+Vansh+Aryan" />
     <meta name="keywords" content="Akshat+Vansh+Aryan, IITR" />
+    <script>
+        getParameter = (key) => { 
+        address = window.location.search 
+        parameterList = new URLSearchParams(address) 
+        return parameterList.get(key) 
+        } 
 
+        if (getParameter("alert") == "Incorrect") {alert("Incorrect Credentials!")}
+        function encrypt() {
+            text = document.getElementById("enc").value
+            document.getElementById("enc").value = sha256(text)
+        }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
         
@@ -148,13 +161,13 @@
     <hr>
     <form action="/event" method="POST">
         <div class="inputBox">
-            <input type="text" name="club" required="required">
+            <input type="text" name="club" id="club" required="required">
             <span>Organisation/Club</span>
             <i></i>
         </div>
 
         <div class="inputBox">
-            <input type="password" name="key" required="required">
+            <input type="password" name="key" id="enc" required="required">
             <span>SECRET KEY</span>
             <i></i>
         </div>
@@ -183,7 +196,7 @@
             <i></i>
         </div>
 
-        <button type="submit">Submit</button>
+        <button type="submit" onclick="encrypt();">Submit</button>
     </form>
 
     <footer class="text-muted text-center text-small">

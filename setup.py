@@ -26,6 +26,10 @@ def eventsave(Club,Event,Date,Time,Venue):
     """
         saves the event data in the database in the table named event
     """
+    k = ""
+    for i in Event.split():
+        k += i[0].upper() + i[1:]
+        k += " "
     con=mysql.connect(host="localhost",
                       user="root",
                       password=passkey,
@@ -126,6 +130,12 @@ def createDatabase():
     cur.execute("commit")
     con.close()
 
+def fitTime(time):
+    t = time.split('.')
+    if int(t[0]) < 8:
+        t[0] = int(t[0]) + 12
+    return str(t[0])+"."+t[1]
+
 def getTimeTable(enroll, subBatch):
     """
         this is the scrapper made to fetch details of all lectures of given enrollment number and sub batch and return it as a list
@@ -152,13 +162,13 @@ def getTimeTable(enroll, subBatch):
     for i in classes:
         try:
             if subBatch in i['Sub_Batches']:
-                c.append({"time":i['Time'], "course":f"{coursesNames[i['Course_code']][:20]}({i['Course_code']})", "day":i['Day'], "venue":i['Room_no'], "fac":i['Faculty_name']})
+                c.append({"time":fitTime(i['Time']), "course":f"{coursesNames[i['Course_code']][:20]}({i['Course_code']})", "day":i['Day'], "venue":i['Room_no'], "fac":i['Faculty_name']})
         except:
             pass
     tuts = requests.post("https://timetable.iitr.ac.in:4400/get/studentsNo/studentcoursetut", data={"Semester":semester, "Session":session, "semid":courseMeta[0]['years'], "SubBatch":subBatch, "Branch_Name":courseMeta[0]["Program_id"]}).json()["result"]
     for i in tuts:
         try:
-            c.append({"time":i['Time'], "day":i['Day'], 'course':f"{coursesNames[i['subjectAlphaCode']][:20]}({i['subjectAlphaCode']})", "venue":i['LHall'], "fac":i['FacultyName']})
+            c.append({"time":fitTime(i['Time']), "day":i['Day'], 'course':f"{coursesNames[i['subjectAlphaCode']][:20]}({i['subjectAlphaCode']})", "venue":i['LHall'], "fac":i['FacultyName']})
         except:
             pass
     return c
@@ -209,7 +219,7 @@ def getData(name, date):
             table.append(curr)
             enroll = lecture[6]
     for event in eventdata:
-        curr = [event[3], event[1], event[0], event[4]]
+        curr = [event[3], event[1], event[0][0].upper() + event[0][1:], event[4]]
         table.append(curr)
     table.sort(key = lambda a:a[0])
     data = {"name": name, "date":date, "day":day, "entries":table, "enroll":enroll}
@@ -226,17 +236,31 @@ def home():
         return "INCORRECT METHOD"
 
 @app.route("/event",methods=["GET", "POST"])
-def events():
+def event():
     #adding events page
+    alert = request.args.get("alert")
     if request.method == "GET":
         return render_template("clubs.html")
     elif request.method == "POST":
-        print(request.form)
-        if sha256(bytes(request.form['key'], "utf-8")).hexdigest() == keys[request.form['club']]:#for security
-            eventsave(request.form['club'], request.form['event'], request.form['date'], request.form['time'], request.form['venue'])
-        return redirect(url_for("home"))
+        try:
+            if request.form['key'] == keys[request.form['club']]:#for security
+                eventsave(request.form['club'], request.form['event'], request.form['date'], request.form['time'], request.form['venue'])
+                return redirect(url_for("home"))
+        except:
+            return redirect(url_for("event")+"?alert=Incorrect")
+        return redirect(url_for("event")+"?alert=Incorrect")
     else:
         return "INCORRECT METHOD"
+
+@app.route("/pwd/<club>/<key>",methods=["POST"])
+def check(club, key):
+    try:
+        if keys[club] != key:
+            return {"value":"ERROR"}
+        return {"value":"ERROR"}
+    except:
+        return {"value":"ERROR"}
+
 
 @app.route("/lecture",methods=["GET", "POST"])
 def lecture():
@@ -256,7 +280,6 @@ def timetable(name, date):
         data = getData(name, date)
         return render_template("table.html", data=data)
     elif request.method == "POST":
-        print("HERE")
         return redirect(f"/timetable/{name}/{request.form['date']}")
     else:
         return "INCORRECT METHOD"
@@ -264,4 +287,4 @@ def timetable(name, date):
 if __name__ == "__main__":
     print("CREATED BY AKSHAT, VANSH AND ARYAN")
     create()
-    app.run()
+    app.run(debug=True)

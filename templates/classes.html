@@ -149,14 +149,24 @@
       <hr>
     <form action="/lecture" method="POST">
         <div class="form-group">
-          <label for="exampleFormControlInput1">Name</label><br>
-          <input name="name" id="club" id="exampleFormControlInput1" placeholder="Your name" required><br><br>
 
-          <label for="exampleFormControlInput1">Enrollment No.</label><br>
-          <input name="enroll" id="event" id="exampleFormControlInput1" placeholder="enrollment number" required><br><br>
-          
-          <label for="exampleFormControlInput1">Sub-Batch</label><br>
-          <input name="sub" id="event" id="exampleFormControlInput1" placeholder="sub batch" required><br><br>
+          <div class="inputBox">
+            <input type="text" name="name" id="club" required="required">
+            <span>Name</span>
+            <i></i>
+        </div>
+
+        <div class="inputBox">
+          <input type="text" name="enroll" id="club" required="required">
+          <span>Enrollment No.</span>
+          <i></i>
+      </div>
+
+      <div class="inputBox">
+        <input type="text" name="sub" id="club" required="required">
+        <span>Sub Batch</span>
+        <i></i>
+    </div>
 
           <button type="submit" class="btn btn-primary mb-2">Submit</button>
         </div>
