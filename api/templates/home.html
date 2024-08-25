@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WRAPPERS</title>
+
+    <!--Meta Information about the website-->
+    <link rel="icon" href="static/logo.png">
+    <meta name="WRAPPERS..." content="A timetable manager" />
+    <meta name="author" content="Akshat+Vansh+Aryan" />
+    <meta name="keywords" content="Akshat+Vansh+Aryan" />
+    <meta name="keywords" content="IITR" />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #002855; /* Deep Blue Background */
+            color: #F2F2F2; /* Soft White Text */
+            margin: 0;
+            padding: 0;
+        }
+
+        .head {
+            padding: 30px 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            background-image: url('/static/sitebg.jpg'); /* Path to your image */
+            background-size: cover;
+            background-position: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            position: relative;
+            font-size: 14vw;
+            color: transparent;
+            -webkit-text-stroke: 0.3vw #002855; /* Deep Blue Stroke */
+            text-transform: uppercase;
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+
+        h1::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            color: #F2F2F2; /* Soft White Animation */
+            -webkit-text-stroke: 0vw #002855;
+            border-right: 2px solid #F2F2F2;
+            overflow: hidden;
+            animation: animate 6s linear infinite;
+        }
+
+        @keyframes animate {
+            0%, 10%, 100% {
+                width: 0;
+            }
+            70%, 90% {
+                width: 100%;
+            }
+        }
+
+        .box {
+            background-color: #F2F2F2; /* Soft White Background */
+            color: #002855; /* Deep Blue Text */
+            padding: 40px;
+            margin: 30px auto;
+            width: 50%;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h3 {
+            color: #FFB81C; /* Golden Yellow Text */
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .inputBox {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .inputBox input {
+            width: 100%;
+            padding: 10px;
+            background: none;
+            border: none;
+            border-bottom: 2px solid #FFB81C; /* Golden Yellow Border */
+            outline: none;
+            color: #002855; /* Deep Blue Text */
+            font-size: 1em;
+        }
+
+        .inputBox span {
+            position: absolute;
+            left: 0;
+            bottom: 10px;
+            pointer-events: none;
+            transition: 0.3s;
+            color: #FFB81C; /* Golden Yellow Text */
+        }
+
+        .inputBox input:focus ~ span,
+        .inputBox input:valid ~ span {
+            transform: translateY(-20px);
+            font-size: 0.9em;
+        }
+
+        .inputBox i {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #FFB81C; /* Golden Yellow */
+            transition: 0.3s;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .inputBox input:focus ~ i {
+            opacity: 1;
+        }
+
+        button {
+            background-color: #FFB81C; /* Golden Yellow Background */
+            color: #002855; /* Deep Blue Text */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #D79A19; /* Slightly darker Golden Yellow */
+        }
+
+        a.btn {
+            background-color: #FFB81C; /* Golden Yellow Button */
+            color: #002855; /* Deep Blue Text */
+            padding: 10px 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        a.btn:hover {
+            background-color: #D79A19; /* Slightly darker Golden Yellow */
+        }
+
+        footer {
+            margin-top: 50px;
+            padding: 20px 0;
+            background-color: #002855; /* Deep Blue Background */
+            color: #F2F2F2; /* Soft White Text */
+            text-align: center;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+    </style>
+
+</head>
+<body class = "text-center">
+    <div class="head">
+        <h1 class="display-1 fw-bold text-info heading-name" data-text="WRAPPERS...">WRAPPERS...</h1>
+    </div>
+    <div class="box">
+
+        <form action="/" method="POST" class="p-2">
+            <h3>GET IN</h3>
+            <div class="inputBox">
+                <input type="text" name="name" id="query" required="required">
+                <span>Name</span>
+                <i></i>
+            </div>
+            <button type="submit" class="btn col-lg-1 btn-warning">SHOW</button>
+        </form>
+        <a href="/event" class="btn btn-warning">ADD EVENT</a>
+        <a href="/lecture" class="btn btn-warning">ADD LECTURES</a>
+    </div>
+    <footer class="text-muted text-center text-small">
+        <p class="text-muted">&copy; Wrappers by Akshat Srivastava, Vansh Garg and Aryan Gupta </p>
+        </ul>
+        <p class="text-muted">FROM: 26/08/2024</p>
+    </footer>
+
+</body>
+</html>
