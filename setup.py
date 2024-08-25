@@ -1,3 +1,4 @@
+#by jrke(Akshat Srivastava) + aryan gupta + vansh garg
 from flask import Flask, render_template,request,redirect,url_for
 import datetime
 import mysql.connector as mysql
@@ -7,13 +8,24 @@ import requests
 
 app = Flask(__name__)
 
+#some constants
 databaseName = "wrappers"
-passkey = "Akshat*1c++sql"
+passkey = "REDACTED"
 semester = "Autumn"
 session = "2024-25"
-keys = {"a":sha256(b"abc").hexdigest()}
+keys = {'cinesec': 'bbcf9cb7138beb3732ecf25c1f5441a552ed78a4c2e179ef6e8b3ba3d0ff864d', 'comedy club': '8170d962605cae7c1a29106ea8b28de1591852d25ffc3cfe10fbfe5db54b85f5', 'Ecell': '0a04f26be9bc0e52ec52c83323383c5c4335d4cd8c202dabda11c21ebbddc51e', 'kshitij': '659571c90d77cbaece4d5674d5609cc7a104002d57cfbb8f3b9270b30ad114ac', 'music club': 'bbbe030df4a0775589ecd0f6933c0efa93a7aae69c70a795126c7669c24df32c', 'chess club': 'b5e9f69f1ae3a1347090ad53ab75a4edd459b9407502015ae5101e8440d07a4c'}
+
+"""
+    The given site shows the schedule of lectures + events organised by clubs/commitee etc etc
+    for lecture data -- scrapper is made to scrape data from site
+    currently data is saved in mysql(localdatabase)
+    further scope - weekly table, security for a student, delete and update of event/lectures, holiday updates
+"""
 
 def eventsave(Club,Event,Date,Time,Venue):
+    """
+        saves the event data in the database in the table named event
+    """
     con=mysql.connect(host="localhost",
                       user="root",
                       password=passkey,
@@ -24,6 +36,9 @@ def eventsave(Club,Event,Date,Time,Venue):
     con.close()
 
 def classave(Name, Course, Day, Time, Venue, factulty):
+    """
+        saves the information of lectures in table named lecture
+    """
     con=mysql.connect(host="localhost",
                       user="root",
                       password=passkey,
@@ -34,6 +49,9 @@ def classave(Name, Course, Day, Time, Venue, factulty):
     con.close()
 
 def getevents(Date):
+    """
+        returns a list of all events occuring on given date
+    """
     con=mysql.connect(host="localhost",
                       user="root",
                       password=passkey,
@@ -45,6 +63,9 @@ def getevents(Date):
     return event
 
 def getlectures(Name, Day):
+    """
+        returns the list of lectures of given student name, day
+    """
     con=mysql.connect(host="localhost",
                       user="root",
                       password=passkey,
@@ -56,6 +77,9 @@ def getlectures(Name, Day):
     return event
 
 def creatorevent():
+    """
+        creates the table event
+    """
     con=mysql.connect(host="localhost",
                       user="root",
                       password=passkey,
@@ -66,6 +90,9 @@ def creatorevent():
     con.close()
 
 def creatorlectures():
+    """
+        creates the table lecture
+    """
     con=mysql.connect(host="localhost",
                       user="root",
                       password=passkey,
@@ -76,6 +103,9 @@ def creatorlectures():
     con.close()  
 
 def createDatabase():
+    """
+        creates the database wrappers
+    """
     con=mysql.connect(host="localhost",
                       user="root",
                       password=passkey)
@@ -85,6 +115,9 @@ def createDatabase():
     con.close()
 
 def getTimeTable(enroll, subBatch):
+    """
+        this is the scrapper made to fetch details of all lectures of given enrollment number and sub batch and return it as a list
+    """
     courses = requests.post("https://timetable.iitr.ac.in:4400/api/external/studentscourse", data={"EnrollmentNo":enroll, "Semester":semester, "StSessionYear":session}).json()["result"]
     courseMeta = []
     i = 0
@@ -119,11 +152,18 @@ def getTimeTable(enroll, subBatch):
     return c
 
 def save(name, enroll, sub):
+    """
+        driver function of scrapper and also saves the data
+    """
     classes = getTimeTable(enroll, sub)
     for i in classes:
         classave(name, i['course'], i['day'], i['time'].split('-')[0], i['venue'], i['fac'][:50])
 
 def create():
+    """
+        driver for creating tables and databases,
+        uses try and except, so that in case tables are present then it doesn't throw an error
+    """
     try:
         createDatabase()
     except:
@@ -140,6 +180,9 @@ def create():
         pass
 
 def getData(name, date):
+    """
+        returns the list of events and lectures for a student on given date and name
+    """
     splits = date.split('-')
     day = datetime.datetime(int(splits[0]), int(splits[1]), int(splits[2])).strftime("%A")
     eventdata = getevents(date)
@@ -158,6 +201,7 @@ def getData(name, date):
 
 @app.route("/",methods=["GET", "POST"])
 def home():
+    #home page
     if request.method == "GET":
         return render_template("home.html")
     elif request.method == "POST":
@@ -167,11 +211,12 @@ def home():
 
 @app.route("/event",methods=["GET", "POST"])
 def events():
+    #adding events page
     if request.method == "GET":
         return render_template("clubs.html")
     elif request.method == "POST":
         print(request.form)
-        if sha256(bytes(request.form['key'], "utf-8")).hexdigest() == keys[request.form['club']]:
+        if sha256(bytes(request.form['key'], "utf-8")).hexdigest() == keys[request.form['club']]:#for security
             eventsave(request.form['club'], request.form['event'], request.form['date'], request.form['time'], request.form['venue'])
         return redirect(url_for("home"))
     else:
@@ -179,6 +224,7 @@ def events():
 
 @app.route("/lecture",methods=["GET", "POST"])
 def lecture():
+    #adding lectures page
     if request.method == "GET":
         return render_template("classes.html")
     elif request.method == "POST":
@@ -189,6 +235,7 @@ def lecture():
 
 @app.route("/timetable/<name>/<date>",methods=["GET", "POST"])
 def timetable(name, date):
+    #showing the timetable page
     if request.method == "GET":
         data = getData(name, date)
         return render_template("table.html", data=data)
