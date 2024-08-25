@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 #some constants
 databaseName = "wrappers"
-passkey = "Akshat*1c++sql"
+passkey = "REDACTED"
 semester = "Autumn"
 session = "2024-25"
 keys = {'thomso': '4405de62e2d2b354ce7b4c5cd33cbcd02a1b59866d08fb6d84a162104ce33a73', 'cinesec': 'bbcf9cb7138beb3732ecf25c1f5441a552ed78a4c2e179ef6e8b3ba3d0ff864d', 'comedy club': '8170d962605cae7c1a29106ea8b28de1591852d25ffc3cfe10fbfe5db54b85f5', 'Ecell': '0a04f26be9bc0e52ec52c83323383c5c4335d4cd8c202dabda11c21ebbddc51e', 'kshitij': '659571c90d77cbaece4d5674d5609cc7a104002d57cfbb8f3b9270b30ad114ac', 'music club': 'bbbe030df4a0775589ecd0f6933c0efa93a7aae69c70a795126c7669c24df32c', 'chess club': 'b5e9f69f1ae3a1347090ad53ab75a4edd459b9407502015ae5101e8440d07a4c'}
