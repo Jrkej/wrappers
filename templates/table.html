@@ -6,6 +6,7 @@
     <title>{{ data['name'] }} ({{ data['date'] }})</title>
 
     <!--Meta Information about the website-->
+    <link rel="icon" href="../../static/logo.png">
     <meta name="WRAPPERS" content="A timetable manager" />
     <meta name="author" content="Akshat+Vansh+Aryan" />
     <meta name="keywords" content="Akshat+Vansh+Aryan" />
@@ -135,7 +136,7 @@
 </head>
 <body class = "text-center">
        <div class=" py-3 text-center">
-           <h1 class="display-6">{{ data['name'] }}</h1>
+           <h1 class="display-6">{{ data['name'] }}({{ data['enroll'] }})</h1>
            <h5>{{ data['date'] }}, {{ data['day'] }}</h5>
        </div>
     <hr>

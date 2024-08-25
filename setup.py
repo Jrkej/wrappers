@@ -1,4 +1,4 @@
-#by jrke(Akshat Srivastava) + aryan gupta + vansh garg
+#by jrke(Akshat Srivastava)
 from flask import Flask, render_template,request,redirect,url_for
 import datetime
 import mysql.connector as mysql
@@ -10,10 +10,10 @@ app = Flask(__name__)
 
 #some constants
 databaseName = "wrappers"
-passkey = "REDACTED"
+passkey = "Akshat*1c++sql"
 semester = "Autumn"
 session = "2024-25"
-keys = {'cinesec': 'bbcf9cb7138beb3732ecf25c1f5441a552ed78a4c2e179ef6e8b3ba3d0ff864d', 'comedy club': '8170d962605cae7c1a29106ea8b28de1591852d25ffc3cfe10fbfe5db54b85f5', 'Ecell': '0a04f26be9bc0e52ec52c83323383c5c4335d4cd8c202dabda11c21ebbddc51e', 'kshitij': '659571c90d77cbaece4d5674d5609cc7a104002d57cfbb8f3b9270b30ad114ac', 'music club': 'bbbe030df4a0775589ecd0f6933c0efa93a7aae69c70a795126c7669c24df32c', 'chess club': 'b5e9f69f1ae3a1347090ad53ab75a4edd459b9407502015ae5101e8440d07a4c'}
+keys = {'thomso': '4405de62e2d2b354ce7b4c5cd33cbcd02a1b59866d08fb6d84a162104ce33a73', 'cinesec': 'bbcf9cb7138beb3732ecf25c1f5441a552ed78a4c2e179ef6e8b3ba3d0ff864d', 'comedy club': '8170d962605cae7c1a29106ea8b28de1591852d25ffc3cfe10fbfe5db54b85f5', 'Ecell': '0a04f26be9bc0e52ec52c83323383c5c4335d4cd8c202dabda11c21ebbddc51e', 'kshitij': '659571c90d77cbaece4d5674d5609cc7a104002d57cfbb8f3b9270b30ad114ac', 'music club': 'bbbe030df4a0775589ecd0f6933c0efa93a7aae69c70a795126c7669c24df32c', 'chess club': 'b5e9f69f1ae3a1347090ad53ab75a4edd459b9407502015ae5101e8440d07a4c'}
 
 """
     The given site shows the schedule of lectures + events organised by clubs/commitee etc etc
@@ -35,7 +35,7 @@ def eventsave(Club,Event,Date,Time,Venue):
     cur.execute("commit")
     con.close()
 
-def classave(Name, Course, Day, Time, Venue, factulty):
+def classave(Name, Course, Day, Time, Venue, factulty, enroll):
     """
         saves the information of lectures in table named lecture
     """
@@ -44,7 +44,7 @@ def classave(Name, Course, Day, Time, Venue, factulty):
                       password=passkey,
                       database=databaseName)
     cur=con.cursor()
-    cur.execute("insert into lecture values('{}','{}','{}','{}','{}', '{}')".format(Name, Course, Day, Time, Venue, factulty))
+    cur.execute("insert into lecture values('{}','{}','{}','{}','{}','{}','{}')".format(Name, Course, Day, Time, Venue, factulty, enroll))
     cur.execute("commit")
     con.close()
 
@@ -71,9 +71,21 @@ def getlectures(Name, Day):
                       password=passkey,
                       database=databaseName)
     cur=con.cursor()
-    cur.execute("select * from lecture where name='"+Name+"' and Day='"+Day+"'")
+    cur.execute("select distinct * from lecture where name='"+Name+"' and Day='"+Day+"'")
     event=cur.fetchall()
     con.close()
+    if len(event) == 0:
+        con=mysql.connect(host="localhost",
+                      user="root",
+                      password=passkey,
+                      database=databaseName)
+        cur=con.cursor()
+        cur.execute("select distinct * from lecture where name='"+Name+"'")
+        event=cur.fetchall()
+        con.close()
+        if len(event) == 0:
+            return []
+        return event[0][-1]
     return event
 
 def creatorevent():
@@ -98,7 +110,7 @@ def creatorlectures():
                       password=passkey,
                       database=databaseName)
     cur=con.cursor()
-    cur.execute("create table lecture(Name char(25),Course char(30),Day char(12),Time char(10),Venue char(25),Faculty char(50));")
+    cur.execute("create table lecture(Name char(25),Course char(30),Day char(12),Time char(10),Venue char(25),Faculty char(50), Enroll int);")
     cur.execute("commit")
     con.close()  
 
@@ -157,7 +169,7 @@ def save(name, enroll, sub):
     """
     classes = getTimeTable(enroll, sub)
     for i in classes:
-        classave(name, i['course'], i['day'], i['time'].split('-')[0], i['venue'], i['fac'][:50])
+        classave(name, i['course'], i['day'], i['time'].split('-')[0], i['venue'], i['fac'][:50], enroll)
 
 def create():
     """
@@ -188,15 +200,19 @@ def getData(name, date):
     eventdata = getevents(date)
     classdata = getlectures(name, day)
     table = []
-
-    for lecture in classdata:
-        curr = [lecture[3], lecture[1], lecture[5], lecture[4]]
-        table.append(curr)
+    enroll = ""
+    if type(classdata) == int:
+        enroll = classdata
+    else:
+        for lecture in classdata:
+            curr = [lecture[3], lecture[1], lecture[5], lecture[4]]
+            table.append(curr)
+            enroll = lecture[6]
     for event in eventdata:
         curr = [event[3], event[1], event[0], event[4]]
         table.append(curr)
     table.sort(key = lambda a:a[0])
-    data = {"name": name, "date":date, "day":day, "entries":table}
+    data = {"name": name, "date":date, "day":day, "entries":table, "enroll":enroll}
     return data
 
 @app.route("/",methods=["GET", "POST"])
@@ -228,7 +244,7 @@ def lecture():
     if request.method == "GET":
         return render_template("classes.html")
     elif request.method == "POST":
-        save(request.form['name'], request.form['enroll'], request.form['sub'])
+        save(request.form['name'], request.form['enroll'], request.form['sub'].upper())
         return redirect(url_for("home"))
     else:
         return "INCORRECT METHOD"
@@ -246,5 +262,6 @@ def timetable(name, date):
         return "INCORRECT METHOD"
 
 if __name__ == "__main__":
+    print("CREATED BY AKSHAT, VANSH AND ARYAN")
     create()
     app.run()
