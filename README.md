@@ -3,8 +3,10 @@ It will provide a website for students to wrap their events of the day into a si
 link for the website <a href='https://wrappers.vercel.app/'>Wrappers</a>
 
 # INTRODUCTION
-This project came into existence because our team leader wasn't aware of the events of hackathon because of information overload so we created this application to help other lost souls like him(NO OFFENCE)
-
+This project came into existence because our team leader wasn't aware of the events of hackathon because of information overload so we created this application to help other lost souls like him(NO OFFENCE)<br>
+example club name and password for event testing - <br>
+`club - thomso`<br>
+`password - thomso*iitr123`
 
 # INTERESTING FINDINGS
 -While scrapping the time table for a student from official site of IITR timetable no PASSWORD is required to fetch the timetable.
