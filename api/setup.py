@@ -108,6 +108,7 @@ def getTimeTable(enroll, subBatch):
     """
         this is the scrapper made to fetch details of all lectures of given enrollment number and sub batch and return it as a list
     """
+    subBatch = subBatch[2:]
     courses = requests.post("https://timetable.iitr.ac.in:4400/api/external/studentscourse", data={"EnrollmentNo":enroll, "Semester":semester, "StSessionYear":session}).json()["result"]
     courseMeta = []
     i = 0
